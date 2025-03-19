@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+using namespace std;
+vector<int> inputdata(vector<int> data){
+    int size=data.size();
+    for(int i=0;i<size;i++){
+        cin>>data.at(i);
+    }
+    return data;
+    }
+void displaydata(vector<int>&data,int start=0,int end=-1,int pivotindex=-1,bool Endl=true){
+    if(end=-1){
+        end=data.size();
+    }
+    for(int i=start;i<end;i++){
+        if(i==pivotindex){
+            cout<<"["<<data.at(i)<<"]";
+        }
+        else{
+            cout<<data.at(i);
+        }
+        if(i<end-1){
+            cout<<",";
+        }
+    }
+    if(Endl){
+        cout<<endl;
+    }
+}
+void Quicksort(vector<int>& indata,int left, int right, bool direction, int layer=1, string side=""){
+    if(left>=right)return;
+
+    cout<<"第"<<layer;
+    if(!side.empty()){
+        cout<<"層"<<side<<"開始:";
+    }
+    else{
+        cout<<"層開始:";
+    }
+    displaydata(indata, left, right+1);
+
+    int pivot=indata.at(left);
+    int A=right;
+    int B=right+1;
+
+    while(A>=left){
+        if(A==left){
+            B--;
+            swap(indata.at(A),indata.at(B));
+
+            displaydata(indata, left, right+1,B);
+            cout<<"第"<<layer;
+            if(!side.empty()){
+                cout<<"層"<<side<<"結果:";
+            }
+            else{
+                cout<<"層結果"<<endl;
+            }
+            displaydata(indata,left,right+1,B);
+            break;
+        }
+        if((direction&&indata.at(A)>=pivot)||(!direction&&indata.at(A)<=pivot)){
+           B--;
+           swap(indata.at(A),indata.at(B));
+           displaydata(indata,left,right+1);
+           }
+           else{
+               displaydata(indata,left,right+1);
+           }
+           A--;
+    }
+    if(left<B-1){
+        cout<<"第"<<layer+1<<"層左分割:";
+        displaydata(indata,left,B);
+    }
+    if(B+1<=right){
+        cout<<"第"<<layer+1<<"層右分割:";
+        displaydata(indata,B+1,right+1);
+    }
+    if(left<B-1){
+        Quicksort(indata,left,B-1,direction,layer+1,"左");
+    }
+    if(B+1<=right){
+        Quicksort(indata,B+1,right,direction,layer+1,"右");
+    }
+    cout<<"第"<<layer;
+    if(!side.empty()){
+        cout<<"層"<<side<<"結果:";
+    }
+    else{
+        cout<<"層結果:";
+    }
+    cout<<":";
+    displaydata(indata,left,right+1);
+}
+
+int main(){
+    int size,indirection;
+    bool direction;
+    cout<<"總共有多少數字:";
+    cin>>size;
+    vector<int>data(size);
+    cout<<"輸入陣列中數字，並用空格隔開:";
+    data=inputdata(data);
+    cout<<"請輸入排序方向;1代表小到大/0代表大到小:";
+    cin>>indirection;
+    if(indirection==1){
+        direction=true;
+    }
+    else{
+        direction=false;
+    }
+    cout<<"原始資料";
+    displaydata(data);
+        Quicksort(data,0,data.size()-1,direction);
+    cout<<"排列完的數據為:"<<endl;
+    displaydata(data);
+    return 0;
+
+}
